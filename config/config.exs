@@ -13,10 +13,10 @@ config :book_elixir_phoenix_for_rails_engineer,
 # Configures the endpoint
 config :book_elixir_phoenix_for_rails_engineer, BookElixirPhoenixForRailsEngineerWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "OFBpKGujAJC5reF/PoDgpWwjy2SS9Sjp0BjoqGcr6jSmcpTTALzO+xmjTqw6X1wU",
+  secret_key_base: "OWZ0SKRFgw3hf2VEDGTY8mijoPo1kB1LLnL+mZ1RW3xLkdztpYNRSfKLk+h97lD9",
   render_errors: [view: BookElixirPhoenixForRailsEngineerWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: BookElixirPhoenixForRailsEngineer.PubSub,
-  live_view: [signing_salt: "eQ98qsms"]
+  live_view: [signing_salt: "Ec1XUhdP"]
 
 # Configures Elixir's Logger
 config :logger, :console,

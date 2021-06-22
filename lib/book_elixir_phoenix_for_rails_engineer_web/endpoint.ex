@@ -7,7 +7,7 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_book_elixir_phoenix_for_rails_engineer_key",
-    signing_salt: "N6+108Do"
+    signing_salt: "SWzMRnWe"
   ]
 
   socket "/socket", BookElixirPhoenixForRailsEngineerWeb.UserSocket,
