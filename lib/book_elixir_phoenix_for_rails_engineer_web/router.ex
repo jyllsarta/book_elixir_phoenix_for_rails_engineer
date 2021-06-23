@@ -20,6 +20,12 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.Router do
     pow_routes()
   end
 
+  # Only authenticated
+  scope "/", BookElixirPhoenixForRailsEngineerWeb do
+    pipe_through [:browser, :protected]
+    resources "/posts", PostController, except: [:show] # 投稿詳細画⾯のみ、ログインしていなくてもアクセスできるようにする
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -28,7 +34,7 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    resources "/posts", PostController
+    resources "/posts", PostController, only: [:show]
   end
 
   # Other scopes may use custom stacks.

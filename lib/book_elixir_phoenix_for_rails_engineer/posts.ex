@@ -7,6 +7,7 @@ defmodule BookElixirPhoenixForRailsEngineer.Posts do
   alias BookElixirPhoenixForRailsEngineer.Repo
 
   alias BookElixirPhoenixForRailsEngineer.Posts.Post
+  alias BookElixirPhoenixForRailsEngineer.Users.User
 
   @doc """
   Returns the list of posts.
@@ -19,6 +20,17 @@ defmodule BookElixirPhoenixForRailsEngineer.Posts do
   """
   def list_posts do
     Repo.all(Post)
+  end
+
+  @doc """
+  Returns the list of posts created by the user.
+  """
+  def list_posts(%User{} = user) do
+    Post
+    # ここ本が間違えてるじゃん、 P12の |> Post.filter_by_user(Post, user) の通りだと Postを二重に渡して引数多すぎエラーになる
+    # ...がサンプルコードは今後の章で修正されてしまっているのでプルリクが送れない
+    |> Post.filter_by_user(user) 
+    |> Repo.all()
   end
 
   @doc """
@@ -36,6 +48,15 @@ defmodule BookElixirPhoenixForRailsEngineer.Posts do
 
   """
   def get_post!(id), do: Repo.get!(Post, id)
+
+  @doc """
+  Gets a single post created by the user.
+  """
+  def get_post!(%User{} = user, id) do
+    Post
+    |> Post.filter_by_user(user)
+    |> Repo.get!(id)
+  end
 
   @doc """
   Creates a post.

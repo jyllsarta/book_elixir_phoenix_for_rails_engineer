@@ -1,11 +1,12 @@
 defmodule BookElixirPhoenixForRailsEngineerWeb.PostController do
   use BookElixirPhoenixForRailsEngineerWeb, :controller
+  import Pow.Plug
 
   alias BookElixirPhoenixForRailsEngineer.Posts
   alias BookElixirPhoenixForRailsEngineer.Posts.Post
 
   def index(conn, _params) do
-    posts = Posts.list_posts()
+    posts = Posts.list_posts(current_user(conn))
     render(conn, "index.html", posts: posts)
   end
 
@@ -15,6 +16,7 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.PostController do
   end
 
   def create(conn, %{"post" => post_params}) do
+    post_params = Map.put(post_params, "user_id", current_user(conn).id)
     case Posts.create_post(post_params) do
       {:ok, post} ->
         conn
@@ -32,13 +34,13 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.PostController do
   end
 
   def edit(conn, %{"id" => id}) do
-    post = Posts.get_post!(id)
+    post = Posts.get_post!(current_user(conn), id)
     changeset = Posts.change_post(post)
     render(conn, "edit.html", post: post, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "post" => post_params}) do
-    post = Posts.get_post!(id)
+    post = Posts.get_post!(current_user(conn), id)
 
     case Posts.update_post(post, post_params) do
       {:ok, post} ->
@@ -52,7 +54,7 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.PostController do
   end
 
   def delete(conn, %{"id" => id}) do
-    post = Posts.get_post!(id)
+    post = Posts.get_post!(current_user(conn), id)
     {:ok, _post} = Posts.delete_post(post)
 
     conn
