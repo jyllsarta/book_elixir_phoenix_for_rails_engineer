@@ -50,5 +50,6 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+  plug Pow.Plug.Session, otp_app: :book_elixir_phoenix_for_rails_engineer
   plug BookElixirPhoenixForRailsEngineerWeb.Router
 end

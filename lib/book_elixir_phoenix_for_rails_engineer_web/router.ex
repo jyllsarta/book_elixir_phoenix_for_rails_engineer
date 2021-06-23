@@ -1,5 +1,6 @@
 defmodule BookElixirPhoenixForRailsEngineerWeb.Router do
   use BookElixirPhoenixForRailsEngineerWeb, :router
+  use Pow.Phoenix.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -7,6 +8,16 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+  end
+
+  pipeline :protected do
+    plug Pow.Plug.RequireAuthenticated,
+      error_handler: Pow.Phoenix.PlugErrorHandler
+  end
+
+  scope "/" do
+    pipe_through :browser
+    pow_routes()
   end
 
   pipeline :api do
