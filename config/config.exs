@@ -14,7 +14,11 @@ config :book_elixir_phoenix_for_rails_engineer,
 config :book_elixir_phoenix_for_rails_engineer, BookElixirPhoenixForRailsEngineerWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "OWZ0SKRFgw3hf2VEDGTY8mijoPo1kB1LLnL+mZ1RW3xLkdztpYNRSfKLk+h97lD9",
-  render_errors: [view: BookElixirPhoenixForRailsEngineerWeb.ErrorView, accepts: ~w(html json), layout: false],
+  render_errors: [
+    view: BookElixirPhoenixForRailsEngineerWeb.ErrorView,
+    accepts: ~w(html json),
+    layout: false
+  ],
   pubsub_server: BookElixirPhoenixForRailsEngineer.PubSub,
   live_view: [signing_salt: "Ec1XUhdP"]
 

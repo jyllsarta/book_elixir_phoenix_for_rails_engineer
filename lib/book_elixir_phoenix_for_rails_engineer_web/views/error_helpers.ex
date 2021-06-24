@@ -39,7 +39,14 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.ErrorHelpers do
     # should be written to the errors.po file. The :count option is
     # set by Ecto and indicates we should also apply plural rules.
     if count = opts[:count] do
-      Gettext.dngettext(BookElixirPhoenixForRailsEngineerWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(
+        BookElixirPhoenixForRailsEngineerWeb.Gettext,
+        "errors",
+        msg,
+        msg,
+        count,
+        opts
+      )
     else
       Gettext.dgettext(BookElixirPhoenixForRailsEngineerWeb.Gettext, "errors", msg, opts)
     end

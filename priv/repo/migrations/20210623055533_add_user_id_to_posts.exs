@@ -5,6 +5,7 @@ defmodule BookElixirPhoenixForRailsEngineer.Repo.Migrations.AddUserIdToPosts do
     alter table(:posts) do
       add :user_id, references(:users)
     end
+
     create index(:posts, :user_id)
   end
 end

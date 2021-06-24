@@ -23,7 +23,9 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.Router do
   # Only authenticated
   scope "/", BookElixirPhoenixForRailsEngineerWeb do
     pipe_through [:browser, :protected]
-    resources "/posts", PostController, except: [:show] # 投稿詳細画⾯のみ、ログインしていなくてもアクセスできるようにする
+
+    # 投稿詳細画⾯のみ、ログインしていなくてもアクセスできるようにする
+    resources "/posts", PostController, except: [:show]
   end
 
   pipeline :api do

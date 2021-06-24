@@ -31,11 +31,21 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.Telemetry do
       ),
 
       # Database Metrics
-      summary("book_elixir_phoenix_for_rails_engineer.repo.query.total_time", unit: {:native, :millisecond}),
-      summary("book_elixir_phoenix_for_rails_engineer.repo.query.decode_time", unit: {:native, :millisecond}),
-      summary("book_elixir_phoenix_for_rails_engineer.repo.query.query_time", unit: {:native, :millisecond}),
-      summary("book_elixir_phoenix_for_rails_engineer.repo.query.queue_time", unit: {:native, :millisecond}),
-      summary("book_elixir_phoenix_for_rails_engineer.repo.query.idle_time", unit: {:native, :millisecond}),
+      summary("book_elixir_phoenix_for_rails_engineer.repo.query.total_time",
+        unit: {:native, :millisecond}
+      ),
+      summary("book_elixir_phoenix_for_rails_engineer.repo.query.decode_time",
+        unit: {:native, :millisecond}
+      ),
+      summary("book_elixir_phoenix_for_rails_engineer.repo.query.query_time",
+        unit: {:native, :millisecond}
+      ),
+      summary("book_elixir_phoenix_for_rails_engineer.repo.query.queue_time",
+        unit: {:native, :millisecond}
+      ),
+      summary("book_elixir_phoenix_for_rails_engineer.repo.query.idle_time",
+        unit: {:native, :millisecond}
+      ),
 
       # VM Metrics
       summary("vm.memory.total", unit: {:byte, :kilobyte}),

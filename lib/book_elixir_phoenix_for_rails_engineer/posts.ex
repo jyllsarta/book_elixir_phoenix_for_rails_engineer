@@ -30,7 +30,7 @@ defmodule BookElixirPhoenixForRailsEngineer.Posts do
     Post
     # ここ本が間違えてるじゃん、 P12の |> Post.filter_by_user(Post, user) の通りだと Postを二重に渡して引数多すぎエラーになる
     # ...がサンプルコードは今後の章で修正されてしまっているのでプルリクが送れない
-    |> Post.filter_by_user(user) 
+    |> Post.filter_by_user(user)
     |> Repo.all()
     |> Repo.preload(:user)
   end
@@ -73,7 +73,7 @@ defmodule BookElixirPhoenixForRailsEngineer.Posts do
 
   """
   def create_post(attrs \\ %{}) do
-    Ecto.Multi.new
+    Ecto.Multi.new()
     |> Ecto.Multi.insert(:post, Post.changeset(%Post{}, attrs))
     |> Ecto.Multi.update(:post_with_image, &Post.image_changeset(&1.post, attrs))
     |> Repo.transaction()
@@ -92,10 +92,12 @@ defmodule BookElixirPhoenixForRailsEngineer.Posts do
 
   """
   def update_post(%Post{} = post, attrs) do
-    changeset = Ecto.Changeset.merge(
-      Post.changeset(post, attrs),
-      Post.image_changeset(post, attrs)
-    )
+    changeset =
+      Ecto.Changeset.merge(
+        Post.changeset(post, attrs),
+        Post.image_changeset(post, attrs)
+      )
+
     Repo.update(changeset)
   end
 

@@ -47,7 +47,7 @@ defmodule BookElixirPhoenixForRailsEngineer.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:pow, "~> 1.0.20"},
       {:waffle, "~> 1.1.2"},
-      {:waffle_ecto, "~> 0.0.9"},
+      {:waffle_ecto, "~> 0.0.9"}
     ]
   end
 
