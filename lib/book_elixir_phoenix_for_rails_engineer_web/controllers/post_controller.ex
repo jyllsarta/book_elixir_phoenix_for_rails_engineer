@@ -18,12 +18,12 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.PostController do
   def create(conn, %{"post" => post_params}) do
     post_params = Map.put(post_params, "user_id", current_user(conn).id)
     case Posts.create_post(post_params) do
-      {:ok, post} ->
+      {:ok, %{post_with_image: post}} ->
         conn
         |> put_flash(:info, "Post created successfully.")
         |> redirect(to: Routes.post_path(conn, :show, post))
 
-      {:error, %Ecto.Changeset{} = changeset} ->
+      {:error, _, %Ecto.Changeset{} = changeset, _} ->
         render(conn, "new.html", changeset: changeset)
     end
   end

@@ -7,6 +7,10 @@
     <%= @post.body %>
   </li>
 
+  <li>
+    <strong>Image:</strong>
+    <img src="<%= BookElixirPhoenixForRailsEngineer.PostImageUploader.url({@post.image, @post}) %>">
+  </li>
 </ul>
 
 <span><%= link "Edit", to: Routes.post_path(@conn, :edit, @post) %></span>

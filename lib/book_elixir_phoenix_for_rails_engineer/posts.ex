@@ -71,9 +71,10 @@ defmodule BookElixirPhoenixForRailsEngineer.Posts do
 
   """
   def create_post(attrs \\ %{}) do
-    %Post{}
-    |> Post.changeset(attrs)
-    |> Repo.insert()
+    Ecto.Multi.new
+    |> Ecto.Multi.insert(:post, Post.changeset(%Post{}, attrs))
+    |> Ecto.Multi.update(:post_with_image, &Post.image_changeset(&1.post, attrs))
+    |> Repo.transaction()
   end
 
   @doc """
@@ -89,9 +90,11 @@ defmodule BookElixirPhoenixForRailsEngineer.Posts do
 
   """
   def update_post(%Post{} = post, attrs) do
-    post
-    |> Post.changeset(attrs)
-    |> Repo.update()
+    changeset = Ecto.Changeset.merge(
+      Post.changeset(post, attrs),
+      Post.image_changeset(post, attrs)
+    )
+    Repo.update(changeset)
   end
 
   @doc """
