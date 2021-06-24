@@ -3,32 +3,78 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.PostControllerTest do
 
   alias BookElixirPhoenixForRailsEngineer.Posts
 
-  @create_attrs %{body: "some body"}
+  @create_attrs %{
+    body: "some body",
+    image: %Plug.Upload{path: "test/support/fixtures/dummy.png", filename: "dummy.png"}
+  }
   @update_attrs %{body: "some updated body"}
   @invalid_attrs %{body: nil}
 
   def fixture(:post) do
-    {:ok, post} = Posts.create_post(@create_attrs)
+    attrs = Map.put(@create_attrs, :user_id, user_fixture().id)
+    {:ok, %{post_with_image: post}} = Posts.create_post(attrs)
+
     post
+    |> BookElixirPhoenixForRailsEngineer.Repo.preload(:user)
+  end
+
+  def user_fixture(attrs \\ %{email: "test@example.com"}) do
+    {:ok, user} =
+      attrs
+      |> Map.merge(%{password: "password", password_confirmation: "password"})
+      |> Pow.Operations.create(otp_app: :book_elixir_phoenix_for_rails_engineer)
+
+    user
+  end
+
+  # Pow.Plug.assign_current_user/3 で、指定したユーザでログインした状態にする
+
+  def sign_in(conn, user \\ user_fixture()) do
+    Pow.Plug.assign_current_user(conn, user, otp_app: :book_elixir_phoenix_for_rails_engineer)
   end
 
   describe "index" do
     test "lists all posts", %{conn: conn} do
-      conn = get(conn, Routes.post_path(conn, :index))
-      assert html_response(conn, 200) =~ "Listing Posts"
+      conn =
+        conn
+        |> sign_in()
+        |> get(Routes.post_path(conn, :index))
+
+      assert html_response(conn, 200) =~ "Your posts"
+    end
+
+    test "redirects to /session/new when not signed in", %{conn: conn} do
+      path = Routes.post_path(conn, :index)
+      conn = get(conn, path)
+
+      # Powでは、ログインしていないと閲覧できないURLに遷移すると GETパラメータ request_path にアクセスしようとしていたURLのパスを含めてログイン画⾯にリダイレクトされる
+      assert redirected_to(conn) == Routes.pow_session_path(conn, :new, request_path: path)
     end
   end
 
   describe "new post" do
     test "renders form", %{conn: conn} do
-      conn = get(conn, Routes.post_path(conn, :new))
+      conn =
+        conn
+        |> sign_in()
+        |> get(Routes.post_path(conn, :new))
+
       assert html_response(conn, 200) =~ "New Post"
+    end
+
+    test "redirects to /session/new when not signed in", %{conn: conn} do
+      path = Routes.post_path(conn, :new)
+      conn = get(conn, path)
+      assert redirected_to(conn) == Routes.pow_session_path(conn, :new, request_path: path)
     end
   end
 
   describe "create post" do
     test "redirects to show when data is valid", %{conn: conn} do
-      conn = post(conn, Routes.post_path(conn, :create), post: @create_attrs)
+      conn =
+        conn
+        |> sign_in()
+        |> post(Routes.post_path(conn, :create), post: @create_attrs)
 
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == Routes.post_path(conn, :show, id)
@@ -38,7 +84,11 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.PostControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.post_path(conn, :create), post: @invalid_attrs)
+      conn =
+        conn
+        |> sign_in()
+        |> post(Routes.post_path(conn, :create), post: @invalid_attrs)
+
       assert html_response(conn, 200) =~ "New Post"
     end
   end
@@ -47,8 +97,18 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.PostControllerTest do
     setup [:create_post]
 
     test "renders form for editing chosen post", %{conn: conn, post: post} do
-      conn = get(conn, Routes.post_path(conn, :edit, post))
+      conn =
+        conn
+        |> sign_in(post.user)
+        |> get(Routes.post_path(conn, :edit, post))
+
       assert html_response(conn, 200) =~ "Edit Post"
+    end
+
+    test "redirects to /session/new when not signed in", %{conn: conn, post: post} do
+      path = Routes.post_path(conn, :edit, post)
+      conn = get(conn, path)
+      assert redirected_to(conn) == Routes.pow_session_path(conn, :new, request_path: path)
     end
   end
 
@@ -56,7 +116,11 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.PostControllerTest do
     setup [:create_post]
 
     test "redirects when data is valid", %{conn: conn, post: post} do
-      conn = put(conn, Routes.post_path(conn, :update, post), post: @update_attrs)
+      conn =
+        conn
+        |> sign_in(post.user)
+        |> put(Routes.post_path(conn, :update, post), post: @update_attrs)
+
       assert redirected_to(conn) == Routes.post_path(conn, :show, post)
 
       conn = get(conn, Routes.post_path(conn, :show, post))
@@ -64,7 +128,11 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.PostControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, post: post} do
-      conn = put(conn, Routes.post_path(conn, :update, post), post: @invalid_attrs)
+      conn =
+        conn
+        |> sign_in(post.user)
+        |> put(Routes.post_path(conn, :update, post), post: @invalid_attrs)
+
       assert html_response(conn, 200) =~ "Edit Post"
     end
   end
@@ -73,7 +141,11 @@ defmodule BookElixirPhoenixForRailsEngineerWeb.PostControllerTest do
     setup [:create_post]
 
     test "deletes chosen post", %{conn: conn, post: post} do
-      conn = delete(conn, Routes.post_path(conn, :delete, post))
+      conn =
+        conn
+        |> sign_in(post.user)
+        |> delete(Routes.post_path(conn, :delete, post))
+
       assert redirected_to(conn) == Routes.post_path(conn, :index)
 
       assert_error_sent 404, fn ->

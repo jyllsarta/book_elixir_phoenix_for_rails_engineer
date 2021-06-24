@@ -20,3 +20,4 @@ config :book_elixir_phoenix_for_rails_engineer, BookElixirPhoenixForRailsEnginee
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+config :waffle, storage: Waffle.Storage.Local
