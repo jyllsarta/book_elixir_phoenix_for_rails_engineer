@@ -1,17 +1,17 @@
 <h1>Show Post</h1>
-
 <ul>
-
-  <li>
-    <strong>Body:</strong>
-    <%= @post.body %>
-  </li>
-
-  <li>
-    <strong>Image:</strong>
-    <img src="<%= BookElixirPhoenixForRailsEngineer.PostImageUploader.url({@post.image, @post}) %>">
-  </li>
+<li>
+<strong>User:</strong>
+<%= @post.user.email %>
+</li>
+<li>
+<strong>Body:</strong>
+<%= @post.body %>
+</li>
+<li>
+<strong>Image:</strong>
+<img src="<%= BookElixirPhoenixForRailsEngineer.PostImageUploader.url({@post.image, @post})%>">
+</li>
 </ul>
-
 <span><%= link "Edit", to: Routes.post_path(@conn, :edit, @post) %></span>
 <span><%= link "Back", to: Routes.post_path(@conn, :index) %></span>

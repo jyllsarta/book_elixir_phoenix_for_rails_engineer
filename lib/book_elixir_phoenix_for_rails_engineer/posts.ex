@@ -20,6 +20,7 @@ defmodule BookElixirPhoenixForRailsEngineer.Posts do
   """
   def list_posts do
     Repo.all(Post)
+    |> Repo.preload(:user)
   end
 
   @doc """
@@ -31,6 +32,7 @@ defmodule BookElixirPhoenixForRailsEngineer.Posts do
     # ...がサンプルコードは今後の章で修正されてしまっているのでプルリクが送れない
     |> Post.filter_by_user(user) 
     |> Repo.all()
+    |> Repo.preload(:user)
   end
 
   @doc """
@@ -47,7 +49,7 @@ defmodule BookElixirPhoenixForRailsEngineer.Posts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_post!(id), do: Repo.get!(Post, id)
+  def get_post!(id), do: Repo.get!(Post, id) |> Repo.preload(:user)
 
   @doc """
   Gets a single post created by the user.
